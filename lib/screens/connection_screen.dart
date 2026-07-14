@@ -17,7 +17,8 @@ class ConnectionScreen extends StatefulWidget {
 class _ConnectionScreenState extends State<ConnectionScreen> {
   final _formKey = GlobalKey<FormState>();
   final _ipController = TextEditingController();
-  final _portController = TextEditingController(text: '80');
+  final _portController =
+      TextEditingController(text: FarmLensConstants.defaultDevicePort);
   List<String> _recentUrls = [];
   bool _isConnecting = false;
 
@@ -101,7 +102,7 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
   void _useHostname() {
     setState(() {
       _ipController.text = 'farmlens.local';
-      _portController.text = '80';
+      _portController.text = FarmLensConstants.defaultDevicePort;
     });
   }
 
@@ -353,7 +354,8 @@ class _ConnectionScreenState extends State<ConnectionScreen> {
                             fontSize: 14,
                             color: FarmLensColors.textPrimary,
                           ),
-                          decoration: _fieldDecoration('80'),
+                          decoration:
+                              _fieldDecoration(FarmLensConstants.defaultDevicePort),
                         ),
                         const SizedBox(height: 8),
                         const Text(

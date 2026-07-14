@@ -39,6 +39,7 @@ Screens (Dashboard, Alerts, Log, Settings) ── consume providers via `provide
 
 ## Known follow-up work (not yet done — intentionally left as-is during the repo reorg)
 
-- `lib/constants.dart` and `lib/screens/connection_screen.dart` still default the port field to `80` (ESP32-era default). The app works fine against an RPi node today, but the user must manually type `8000`. Update `FarmLensConstants` to add a `defaultDevicePort` and change the two `'80'` defaults in `connection_screen.dart` to `8000`.
 - No authentication on the node API yet — matches the current state of `FarmLens-node`'s `rpi/api.py`. `FarmLens-Platform`'s roadmap already anticipates per-node API keys; this app will need an auth header once that lands.
 - `test/widget_test.dart` is the only test — worth expanding once the app is under active iteration again.
+
+See `PLAN.md` for what's left before this app talks to real (not mock) hardware.
