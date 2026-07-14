@@ -1,32 +1,45 @@
 # FarmLens App
 
-Edge AI crop health monitoring — Flutter companion app for a FarmLens field node.
+Flutter companion app for a FarmLens edge-AI crop health monitoring node — connects to
+a field node over LAN, displays live sensor and disease-detection data, and keeps a
+traceability log of every monitoring cycle.
 
-**Suez Canal University · Faculty of Engineering · IC EISIS 2026**
+**Suez Canal University · Faculty of Engineering**
 Abdel Rahman M. El-Saied · Mohamed Elsayed
 
 ---
 
-## Current status
+## Overview
 
-The app talks to whatever node is running the FarmLens REST API (see [API Contract](#api-contract) below) — it does not care whether that node is a Raspberry Pi or an ESP32, since the IP/port are entered manually on the Connection screen. Today the primary target is the **Raspberry Pi node** (see `FarmLens-node` repo), which serves the API on port `8000` and self-generates mock sensor readings until real ESP32 sensor hardware exists.
+The app speaks a small REST contract (see [API Contract](#api-contract)) against
+whatever node is running it — it doesn't care whether that node is a Raspberry Pi or
+an ESP32, since the IP/port are entered manually on the Connection screen. Today the
+primary target is the **Raspberry Pi node** (see the [`FarmLens-node`](../FarmLens-node)
+repo), which serves the API on port `8000` and self-generates mock sensor readings
+until real ESP32 sensor hardware exists.
 
-> The Connection screen's port field currently pre-fills `80` (a holdover from an earlier ESP32-only phase). Until that default is updated in code, enter port `8000` manually when connecting to an RPi node. This is tracked as a follow-up, not yet fixed — see `ARCHITECTURE.md`.
+## Status
+
+Software complete and validated end-to-end against a mock-data Raspberry Pi node.
+No physical field hardware exists yet — see [`PLAN.md`](PLAN.md) for what's left
+before this app talks to real sensors, and [`ARCHITECTURE.md`](ARCHITECTURE.md) for
+how it fits into the rest of the system.
 
 ## Setup
 
 1. Install Flutter SDK (>=3.3.0)
 2. Clone this repository
 3. Run `flutter pub get`
-4. Make sure the phone and the FarmLens node (Raspberry Pi) are on the same WiFi network/LAN
+4. Make sure the phone and the FarmLens node (Raspberry Pi) are on the same WiFi
+   network/LAN
 5. Run `flutter run`
-6. Enter the node's IP address (find it on the Pi with `hostname -I`)
-7. Enter port `8000` for a Raspberry Pi node (or `80` for the legacy ESP32 mock server)
-8. Tap **Connect**
+6. Enter the node's IP address (find it on the Pi with `hostname -I`) and port `8000`
+7. Tap **Connect**
 
-### Optional: develop without any hardware
+### Developing without hardware
 
-`tool/mock-esp32-server.js` is a standalone Node.js HTTP server that fakes the FarmLens REST API on port 80, useful for UI work when no RPi or ESP32 is reachable:
+`tool/mock-esp32-server.js` is a standalone Node.js HTTP server that fakes the
+FarmLens REST API, useful for UI work when no RPi or ESP32 is reachable:
 
 ```
 node tool/mock-esp32-server.js
@@ -42,7 +55,7 @@ Then connect the app to `localhost` (or your machine's LAN IP) on port `80`.
 lib/
 ├── main.dart               — App entry point, MultiProvider setup
 ├── theme.dart              — FarmLensColors + farmLensTheme()
-├── constants.dart          — default IP, poll interval, timeout, pref keys
+├── constants.dart          — default IP/port, poll interval, timeout, pref keys
 ├── router.dart             — GoRouter: splash / connect / main / log/:id
 ├── utils/
 │   └── formatters.dart     — formatDetectionClass, isDisease, ccombinedColor, timeAgo
@@ -86,7 +99,9 @@ The connected node must serve these endpoints at `http://{ip}:{port}`:
 | GET | `/api/settings` | Current fusion weights |
 | POST | `/api/settings` | Update fusion weights |
 
-This contract is the shared source of truth with the `FarmLens-node` repo — its `rpi/api.py` implements these same endpoints. If either side changes the contract, update both READMEs together.
+This contract is the shared source of truth with the `FarmLens-node` repo — its
+`rpi/api.py` implements these same endpoints. If either side changes the contract,
+update both READMEs together.
 
 ---
 
@@ -139,7 +154,20 @@ Ccombined color rule: `< 0.4` green · `0.4–0.65` amber · `> 0.65` red
 
 ## Related repos
 
-- `FarmLens-node` — Raspberry Pi edge server (this app's primary backend) + ESP32 sensor firmware
-- `FarmLens-Platform` — future cloud aggregator for multiple field nodes (not yet in use)
+- `FarmLens-node` — Raspberry Pi edge server (this app's primary backend) + ESP32
+  sensor firmware
+- `FarmLens-Platform` — future cloud aggregator for multiple field nodes (not yet
+  in use)
 
-See `ARCHITECTURE.md` for how this app fits into the overall system and a list of known follow-up work.
+See [`ARCHITECTURE.md`](ARCHITECTURE.md) for how this app fits into the overall
+system, and [`PLAN.md`](PLAN.md) for remaining work before real hardware.
+
+## License
+
+All rights reserved. See [`LICENSE`](LICENSE) — this code may not be copied,
+modified, or reused without written permission from the copyright holder.
+
+## Team
+
+Abdel Rahman M. El-Saied · Mohamed Elsayed
+Suez Canal University, Faculty of Engineering
